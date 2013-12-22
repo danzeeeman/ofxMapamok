@@ -17,10 +17,16 @@ public:
     ofxMapaMok      mapamoko01;
     ofxMapaMok      mapamoko02;
     
-    ofVideoGrabber      video;
     
     ofShader        shader;
     
+    ofVideoGrabber      video;
+    ofxSmartViewPort    videoViewPort;
+    
+    ofFbo           canvas;
+    
     int             textWidth;
     int             textHeight;
+    
+    bool            bCanvasMode;
 };

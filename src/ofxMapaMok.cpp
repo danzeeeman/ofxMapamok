@@ -34,6 +34,7 @@ ofxMapaMok::ofxMapaMok(){
     dragging = false;
     arrowing = false;
     shader = NULL;
+    hasCalibration = false;
     useLights = true;
     
     //  ViewPort default setup
@@ -46,13 +47,20 @@ ofxMapaMok::ofxMapaMok(){
 //  ------------------------------------------ MAIN LOOP
 
 void ofxMapaMok::update(){
-    
+    cout<<hasCalibration<<endl;
 	if( setupMode == SETUP_SELECT ) {
 	
         cam.enableMouseInput();
 	
-    } else {
-		
+    }
+    if(setupMode != SETUP_SELECT || hasCalibration){
+		if(hasCalibration){
+            if (calibrationReady){
+                setupMode = SETUP_NONE;
+                selectionChoice = 0;
+                cout<<"precalibrated"<<endl;
+            }
+        }
         //  Generate camera matrix given aov guess
         //
         cv::Size2i imageSize(ofGetWidth(), ofGetHeight());
@@ -94,6 +102,7 @@ void ofxMapaMok::update(){
             intrinsics.setup(cameraMatrix, imageSize);
             modelMatrix = ofxCv::makeMatrix(rvec, tvec);
             calibrationReady = true;
+
         } else {
             calibrationReady = false;
         }
@@ -551,7 +560,9 @@ bool ofxMapaMok::loadCalibration(string _xmlfile) {
     if (XML.loadFile(_xmlfile)){
         
         if (XML.tagExists("MAPAMOK")){
+  
             ofLog(OF_LOG_NOTICE,"Loading MapaMok calibration found at " + modelFile );
+            hasCalibration = true;
             XML.pushTag("MAPAMOK");
             int total = XML.getNumTags("point");
             for (int i = 0; i < total; i++) {

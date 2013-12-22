@@ -123,6 +123,7 @@ private:
             selectedVert,
             dragging,
             arrowing,
-            hoverSelected;
+            hoverSelected,
+            hasCalibration;
 };
 #endif

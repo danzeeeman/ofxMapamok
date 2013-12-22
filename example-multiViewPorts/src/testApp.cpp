@@ -14,18 +14,34 @@ void testApp::setup(){
     mapamoko01.loadSettings("viewport01.xml");
     mapamoko01.loadMesh("model.dae", textWidth, textHeight);
     mapamoko01.drawMode = DRAW_FACES;
+
     
     mapamoko02.loadSettings("viewport02.xml");
     mapamoko02.loadMesh("model.dae", textWidth, textHeight);
     
+
+    
+    //  Setup the canvas
+    //
+    canvas.allocate(textWidth, textHeight);
+    canvas.begin();
+    ofClear(0);
+    canvas.end();
+    
     //  Init WebCam texture
     //
-    video.initGrabber(textWidth,textHeight);
+    video.initGrabber(640,480);
+    videoViewPort.loadSettings("video.xml");
+    
+    bCanvasMode = false;
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
     video.update();
+    
+ 
+
     
     mapamoko01.update();
     mapamoko02.update();
@@ -39,7 +55,7 @@ void testApp::draw(){
     //  Para editar el viewPort tiene q apretar 'E' as’ no se solapa con el resto
     //
         
-    mapamoko01.draw( &canvas.getTextureReference() );
+    mapamoko01.draw( &video.getTextureReference());
     mapamoko02.draw( );
             
 }
@@ -62,6 +78,7 @@ void testApp::keyPressed(int key){
         //  Save Calibrations
         //
         mapamoko01.saveCalibration();
+        
     }
 }
 //--------------------------------------------------------------
